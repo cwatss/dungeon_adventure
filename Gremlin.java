@@ -1,7 +1,7 @@
 
 /**
  * Class Gremlin inherits from Monster and is one of
- * the four Monster characters.
+ * the four Monster characters. Gremlins are cool. 
  * @author corinne watson
  * @version 4/21/21
  */
