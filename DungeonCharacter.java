@@ -19,7 +19,8 @@ import java.util.Scanner;
 /**
  * Class DungeonCharacter is a public abstract class which
  * serves as the super class for the program. It is the super class
- * for class Hero, class Monster, and their subclasses.
+ * for class Hero, class Monster, and their subclasses. This also has a sound
+ * player.
  */
 
 public abstract class DungeonCharacter {
