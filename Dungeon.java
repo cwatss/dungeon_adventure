@@ -280,6 +280,9 @@ public class Dungeon {
 				else
 					y += 1;
 				break;
+			default:
+				System.out.println("That is not a proper movement.");
+				break;
 		}
 		myLocales[4][0] = x;
 		myLocales[4][1] = y;			
