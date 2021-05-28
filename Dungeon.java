@@ -196,7 +196,6 @@ public class Dungeon {
      */
 	private String lineMaker(final String theSegment, final int theLength) {
 		StringBuilder sb = new StringBuilder();
-		
 		sb.append("*");
 		for (int i = 0; i < theLength; i++) {
 			sb.append(" ");
@@ -249,19 +248,40 @@ public class Dungeon {
 		return sb.toString();
 	}
 	
-	public void moveHero() {
-		/*
-		 * PLACEHOLDER
-		 * - Will need to update row 4 of myLocales to keep track of how the
-		 * hero is moving
-		 * 
-		 * - idea: accept a number and use a switch to alter the coordinates
-		 */
-	}
-	
-	/*
-	 * BRAINSTORMING (for other necessary methods)
-	 * -------------------------------------------
+	/**
+	 * Updates the Hero's location within myLocales.
 	 * 
+	 * @param theDirection is the direction the Hero has chosen to move.
 	 */
+	public void moveHero(final String theDirection) {
+		int x = myLocales[4][0], y = myLocales[4][1];
+		switch(theDirection.toLowerCase()) { // toLowerCase() may not be necessary if data is fixed up beforehand
+			case "w": 
+				if (x - 1 < 0)
+					System.out.println("Cannot move up any further.");
+				else
+					x -= 1;
+				break;
+			case "s":
+				if (x + 1 > myMaze.length - 1)
+					System.out.println("Cannot move down any further.");
+				else
+					x += 1;
+				break;
+			case "a":
+				if (y - 1 < 0)
+					System.out.println("Cannot move left any further.");
+				else
+					y -= 1;
+				break;
+			case "d":
+				if (y + 1 > myMaze[0].length - 1)
+					System.out.println("Cannot move right any further.");
+				else
+					y += 1;
+				break;
+		}
+		myLocales[4][0] = x;
+		myLocales[4][1] = y;			
+	}
 }
