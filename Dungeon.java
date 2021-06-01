@@ -57,7 +57,7 @@ public class Dungeon {
 	
 	/**
 	 * Creates and returns a 5x2 2D integer array. Each row represents
-	 * coordinates and is unique.
+	 * coordinates and is mutually exclusive.
 	 * 
 	 * @return a reference to a 5x2 2D integer array.
 	 */
@@ -97,10 +97,16 @@ public class Dungeon {
 	/**
 	 * Creates and returns a 5x5 2D array of Rooms.
 	 * 
-	 * @return a reference to a 5x5 2D array.
+	 * @return a reference to a 5x5 2D array of Rooms.
 	 */
 	private Room[][] setMaze() {
 		Room[][] returnArray = new Room[5][5];
+		
+		// Creates non-unique Rooms
+		for (int row = 0; row < returnArray.length; row++) {
+			for (int col = 0; col < returnArray[row].length; col++)
+					returnArray[row][col] = new Room();
+		}
 		
 		// Creates unique Rooms
 		for (int i = 0; i < myLocales.length - 1; i++) {
@@ -118,15 +124,7 @@ public class Dungeon {
 					break;
 			}
 		}
-		
-		// Creates non-unique Rooms
-		for (int row = 0; row < returnArray.length; row++) {
-			for (int col = 0; col < returnArray[row].length; col++) {
-				if (returnArray[row][col] == null)
-					returnArray[row][col] = new Room();
-			}
-		}
-		
+
 		return returnArray;
 	}
 	
@@ -170,7 +168,7 @@ public class Dungeon {
      */
 	private String lineMaker(final String theSegment, final int theLength) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("*");
+		sb.append("    *");
 		for (int i = 0; i < theLength; i++) {
 			sb.append(" ");
 			sb.append(theSegment);
@@ -190,10 +188,13 @@ public class Dungeon {
      */
 	private String lineMaker(final int theRow) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("*");
+		sb.append("    *");
 		for (int col = 0; col < myMaze[theRow].length; col++) {
 			sb.append(" ");
-			sb.append(myMaze[theRow][col]);
+			if (theRow == myLocales[4][0] && col == myLocales[4][1])
+				sb.append("@");	// @ for Hero's location
+			else
+				sb.append(myMaze[theRow][col]);
 			sb.append(" ");
 			if (col == myMaze[theRow].length - 1)
 				sb.append("*");
@@ -252,7 +253,7 @@ public class Dungeon {
 		if (properMove) {
 			myLocales[4][0] = x;
 			myLocales[4][1] = y;
-			myMaze[x][y].affectHero(theHero);
+			myMaze[x][y].roomActivate(theHero);
 		}
 	}
 }
