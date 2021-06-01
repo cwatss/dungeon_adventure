@@ -32,35 +32,43 @@ public class Room {
 	/*
 	 * X - Monster
 	 * P - Pit
-	 * I - Entrance (In)
-	 * O - Exit (Out)
+	 * I - Entrance (In) (SPECIAL)
+	 * O - Exit (Out) (SPECIAL)
 	 * V - Vision Potion
 	 * H - Healing Potion
 	 * E - Empty Room
 	 * M – Multiple Items
+	 * C - Crown
 	 */
 
 	/** Creates an instance of this class. */
 	public Room() {
-		myReveal = true;
+		myReveal = true;	// TRUE TO DEBUG
 		myItems = setItems();
 	}
 	
+	/**
+	 * Creates a special instance of this class.
+	 * 
+	 * @param theUnique is a String description of the unique item in the
+	 * instance.
+	 */
 	public Room(final String theUnique) {
-		myReveal = true;
+		myReveal = true;	// TRUE TO DEBUG
+		myItems = new ArrayList<String>();
 		switch (theUnique) {
 			case "entrance":
 				myReveal = true;
+				myItems.add("I");
 				break;
 			case "exit":
+				myItems.add("O");
 				break;
-			case "crown1":
-				break;
-			case "crown2":
+			case "crown":
+				myItems.add("C");
 				break;
 		}
 	}
-	
 	
 	/**
 	 * Populates an instance with items.
@@ -101,13 +109,19 @@ public class Room {
 					// GENERATE MONSTER
 					// ACTIVATE COMBAT
 					break;
+				case "C":
+					//PLACEHOLDER
+					// HERO GETS A CROWN PIECE
+					break;
 				default:
+					//PLACEHOLDER
+					// WILL NEED MORE CASES
 					break;
 			}
 		}
 		
-		// Neutralize all active items within the room
-		if (myItems.get(0) != "E") {
+		// Neutralizes all active items within the room
+		if (myItems.get(0) != "I" && myItems.get(0) != "O" && myItems.get(0) != "E") {
 			myItems.clear();
 			myItems.add("E");
 		}
@@ -130,6 +144,4 @@ public class Room {
 			sb.append("?");
 		return sb.toString();
 	}
-	
-	
 }

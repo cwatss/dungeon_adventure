@@ -101,59 +101,34 @@ public class Dungeon {
 	 */
 	private Room[][] setMaze() {
 		Room[][] returnArray = new Room[5][5];
-		for (int row = 0; row < returnArray.length; row++) {
-			for (int col = 0; col < returnArray[row].length; col++) {
-				returnArray[row][col] = new Room();
+		
+		// Creates unique Rooms
+		for (int i = 0; i < myLocales.length - 1; i++) {
+			int row = myLocales[i][0];
+			int col = myLocales[i][1];
+			switch (i) {
+				case 0:
+					returnArray[row][col] = new Room("entrance");
+					break;
+				case 1:
+					returnArray[row][col] = new Room("exit");
+					break;
+				default:
+					returnArray[row][col] = new Room("crown");
+					break;
 			}
 		}
 		
-		/* 
-		 * PLACEHOLDER
-		 * Utilize myLocales to implement the special rooms in Room class
-		 *  a. using constructors (overloaded)
-		 *  b. using mutator methods
-		 */		 
+		// Creates non-unique Rooms
+		for (int row = 0; row < returnArray.length; row++) {
+			for (int col = 0; col < returnArray[row].length; col++) {
+				if (returnArray[row][col] == null)
+					returnArray[row][col] = new Room();
+			}
+		}
 		
 		return returnArray;
 	}
-
-	/* OLDER MORE COMPLICATED TOSTRING
-	 * Parts were excised to overloaded lineMaker method to simplify
-	 * 
-	@Override
-	public String toString() {
-		// * * * * * * * * * * *
-		// * E | ? | ? | ? | ? *
-		// * - * - * - * - * - *
-		// * ? | ? | ? | ? | ? *
-		// * - * - * - * - * - *
-		// * ? | ? | ? | ? | ? *
-		// * - * - * - * - * - *
-		// * ? | ? | ? | ? | ? *
-		// * - * - * - * - * - *
-		// * ? | ? | ? | ? | ? *
-		// * * * * * * * * * * *
-		StringBuilder sb = new StringBuilder();
-		sb.append(lineMaker("*", "*", myMaze[0].length));
-		for (int row = 0; row < myMaze.length; row++) {
-			sb.append("*");
-			for (int col = 0; col < myMaze[row].length; col++) {
-				sb.append(" ");
-				sb.append(myMaze[row][col]);
-				sb.append(" ");
-				if (col == myMaze[row].length - 1)
-					sb.append("*");
-				else
-					sb.append("|");
-			}
-			sb.append("\n");
-			if (row != myMaze.length - 1)
-				sb.append(lineMaker("*", "-", myMaze[0].length));
-		}
-		sb.append(lineMaker("*", "*", myMaze[0].length));
-		
-		return sb.toString();
-	}*/
 	
 	/**
 	 * Returns a String representation of this instance.
@@ -181,7 +156,6 @@ public class Dungeon {
 				sb.append(lineMaker("-", myMaze[0].length));
 		}
 		sb.append(lineMaker("*", myMaze[0].length));
-		
 		return sb.toString();
 	}
 	
@@ -206,24 +180,6 @@ public class Dungeon {
 		sb.append("\n");
 		return sb.toString();
 	}
-	
-	/* OLDER MORE CAPABLE LINEMAKER
-	 * You could specify each segment instead of one being * by default
-	 * 
-	private String lineMaker(final String theSegment, 
-							final String theSegment2, final int theLength) {
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(theSegment);
-		for (int i = 0; i < theLength; i++) {
-			sb.append(" ");
-			sb.append(theSegment2);
-			sb.append(" ");
-			sb.append(theSegment);
-		}
-		sb.append("\n");
-		return sb.toString();
-	}*/
 	
 	/**
      * Creates and return a row of this instance's myMaze.
@@ -253,38 +209,50 @@ public class Dungeon {
 	 * 
 	 * @param theDirection is the direction the Hero has chosen to move.
 	 */
-	public void moveHero(final String theDirection) {
+	public void moveHero(final DungeonCharacter theHero, final String theDirection) {
+		boolean properMove = false;
 		int x = myLocales[4][0], y = myLocales[4][1];
 		switch(theDirection.toLowerCase()) { // toLowerCase() may not be necessary if data is fixed up beforehand
 			case "w": 
 				if (x - 1 < 0)
 					System.out.println("Cannot move up any further.");
-				else
+				else {
 					x -= 1;
+					properMove = true;
+				}
 				break;
 			case "s":
 				if (x + 1 > myMaze.length - 1)
 					System.out.println("Cannot move down any further.");
-				else
+				else {
 					x += 1;
+					properMove = true;
+				}
 				break;
 			case "a":
 				if (y - 1 < 0)
 					System.out.println("Cannot move left any further.");
-				else
+				else {
 					y -= 1;
+					properMove = true;
+				}
 				break;
 			case "d":
 				if (y + 1 > myMaze[0].length - 1)
 					System.out.println("Cannot move right any further.");
-				else
+				else {
 					y += 1;
+					properMove = true;
+				}
 				break;
 			default:
 				System.out.println("That is not a proper movement.");
 				break;
 		}
-		myLocales[4][0] = x;
-		myLocales[4][1] = y;			
+		if (properMove) {
+			myLocales[4][0] = x;
+			myLocales[4][1] = y;
+			myMaze[x][y].affectHero(theHero);
+		}
 	}
 }
