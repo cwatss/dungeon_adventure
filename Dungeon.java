@@ -28,7 +28,7 @@ public class Dungeon {
 	 * toString()
 	 */
 	public static void main(String[] theArgs) {
-		Dungeon test = new Dungeon();
+		Dungeon test = new Dungeon(10);
 		System.out.println(test);		
 	}
 	
@@ -41,8 +41,15 @@ public class Dungeon {
 	 */
 	private int[][] myLocales;
 	
-	/** Creates an instance of this class. */
-	public Dungeon() {
+	/** 
+	 * Creates an instance of this class.
+	 * 
+	 * @param theSize is the size for myMaze.
+	 */
+	public Dungeon(final int theSize) {
+		if (theSize <= 0)
+			throw new IllegalArgumentException("Size passed to Dungeon " +
+											  "constructor was 0 or less.");
 		/* 
 		 * Corresponding rows of myLocales
 		 * 0 - Entrance
@@ -51,17 +58,19 @@ public class Dungeon {
 		 * 3 - Crown2
 		 * 4 - Hero (Starts out at the entrance)
 		 */
-		myLocales = setLocales();
-		myMaze = setMaze();
+		myLocales = setLocales(theSize);
+		myMaze = setMaze(theSize);
 	}
 	
 	/**
 	 * Creates and returns a 5x2 2D integer array. Each row represents
 	 * coordinates and is mutually exclusive.
 	 * 
+	 * @param theSize is the size of myMaze.
+	 * 
 	 * @return a reference to a 5x2 2D integer array.
 	 */
-	private int[][] setLocales() {
+	private int[][] setLocales(final int theSize) {
 		Random rand = new Random();
 		
 		int[][] returnArray = new int[5][2];
@@ -72,7 +81,7 @@ public class Dungeon {
 		int holder = 0;
 		for (int row = 0; row < returnArray.length - 1; row++) {
 			for (int col = 0; col < returnArray[row].length; col++) {
-				int hold = rand.nextInt(5);
+				int hold = rand.nextInt(theSize);
 				if (col == 0)
 					holder = hold;
 				else {
@@ -97,10 +106,12 @@ public class Dungeon {
 	/**
 	 * Creates and returns a 5x5 2D array of Rooms.
 	 * 
+	 * @param theSize is the size of myMaze.
+	 * 
 	 * @return a reference to a 5x5 2D array of Rooms.
 	 */
-	private Room[][] setMaze() {
-		Room[][] returnArray = new Room[5][5];
+	private Room[][] setMaze(final int theSize) {
+		Room[][] returnArray = new Room[theSize][theSize];
 		
 		// Creates non-unique Rooms
 		for (int row = 0; row < returnArray.length; row++) {
@@ -167,6 +178,10 @@ public class Dungeon {
      * @return a String representation of the wall.
      */
 	private String lineMaker(final String theSegment, final int theLength) {
+		if (theSegment == null || theSegment.length() == 0 ||
+		    theLength <= 0)
+			throw new IllegalArgumentException("Segment passed to lineMaker"
+					     + " was null or 0 or length passed was 0 or less");
 		StringBuilder sb = new StringBuilder();
 		sb.append("    *");
 		for (int i = 0; i < theLength; i++) {
@@ -187,6 +202,9 @@ public class Dungeon {
      * @return a String representation of the row.
      */
 	private String lineMaker(final int theRow) {
+		if (theRow >= myMaze.length || theRow < 0)
+			throw new IllegalArgumentException("Row passed to lineMaker " +
+							  "was less than 0 or was bigger the max row.");
 		StringBuilder sb = new StringBuilder();
 		sb.append("    *");
 		for (int col = 0; col < myMaze[theRow].length; col++) {
@@ -210,10 +228,15 @@ public class Dungeon {
 	 * 
 	 * @param theDirection is the direction the Hero has chosen to move.
 	 */
-	public void moveHero(final DungeonCharacter theHero, final String theDirection) {
+	public void moveHero(final DungeonCharacter theHero,
+						 final String theDirection) {
+		if (theHero == null || theDirection == null ||
+			theDirection.length() == 0)
+			throw new IllegalArgumentException("Hero passed to moveHero " +
+							 "was null or direction passed was null or 0.");
 		boolean properMove = false;
 		int x = myLocales[4][0], y = myLocales[4][1];
-		switch(theDirection.toLowerCase()) { // toLowerCase() may not be necessary if data is fixed up beforehand
+		switch(theDirection.toLowerCase()) {
 			case "w": 
 				if (x - 1 < 0)
 					System.out.println("Cannot move up any further.");

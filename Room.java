@@ -7,8 +7,7 @@
  * Instructor:    Tom Capaul
  */
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Random;
 
 /**
@@ -27,7 +26,7 @@ public class Room {
 	private boolean myReveal;
 	
 	/** A list of items within the instance. */
-	private List<String> myItems;
+	private LinkedList<Character> myItems;
 	/*
 	 * X - Monster
 	 * P - Pit
@@ -52,18 +51,24 @@ public class Room {
 	 * @param theUnique is a String for the unique item in the instance.
 	 */
 	public Room(final String theUnique) {
+		if (theUnique == null || theUnique.length() == 0)
+			throw new IllegalArgumentException("Item passed to Room was " +
+											   "null or 0");
 		myReveal = false;	// TRUE TO DEBUG
-		myItems = new ArrayList<String>();
+		myItems = new LinkedList<Character>();
 		switch (theUnique) {
 			case "entrance":
 				myReveal = true;
-				myItems.add("I");
+				myItems.add('I');
 				break;
 			case "exit":
-				myItems.add("O");
+				myItems.add('O');
 				break;
 			case "crown":
-				myItems.add("C");
+				myItems.add('C');
+				break;
+			default:
+				System.out.println("Unrecognized item.");
 				break;
 		}
 	}
@@ -73,23 +78,23 @@ public class Room {
 	 * 
 	 * @return a reference to an ArrayList of String items.
 	 */
-	private ArrayList<String> setItems() {
-		ArrayList<String> returnArray = new ArrayList<String>();
+	private LinkedList<Character> setItems() {
+		LinkedList<Character> returnList = new LinkedList<Character>();
 		
-		// Hero takes damage from pit first, fights monster second, and then picks up loot last
+		// Take damage from pit, then fight monster, and pick up loot last
 		if (MY_RANDOM.nextDouble() <= 0.1)
-			returnArray.add("P");
+			returnList.add('P');
 		if (MY_RANDOM.nextDouble() <= 0.1)
-			returnArray.add("X");
+			returnList.add('X');
 		if (MY_RANDOM.nextDouble() <= 0.1)
-			returnArray.add("H");
+			returnList.add('H');
 		if (MY_RANDOM.nextDouble() <= 0.05)
-			returnArray.add("V");
-		if (returnArray.size() == 0)
-			returnArray.add("E");
-		return returnArray;
+			returnList.add('V');
+		if (returnList.size() == 0)
+			returnList.add('E');
+		return returnList;
 	}
-	
+
 	/**
 	 * Activates the effects of the items within the instance upon the Hero
 	 * when the Hero enters for the first time.
@@ -97,28 +102,31 @@ public class Room {
 	 * @param theHero is a DungeonCharacter instance for the player.
 	 */
 	public void roomActivate(final DungeonCharacter theHero) {
+		if (theHero == null)
+			throw new IllegalArgumentException("Hero passed to roomActivate"
+										       + " was null");		
 		myReveal = true;	// Hero retains knowledge of entered rooms
-		if (myItems.get(0) != "I" && myItems.get(0) != "O" && myItems.get(0) != "E") {
+		if (myItems.get(0) != 'I' && myItems.get(0) != 'O' &&
+			myItems.get(0) != 'E') {
 			for (int i = 0; i < myItems.size(); i++) {
 				switch (myItems.get(i)) {
-					case "H":
+					case 'H':
 						//PLACEHOLDER
 						// HERO GETS HEALTH POT
 						break;
-					case "V":
+					case 'V':
 						//PLACEHOLDER
 						// HERO GETS VISION POT
 						break;
-					case "P":
+					case 'P':
 						// Hero only takes damage from a pit upon entering a Room for the first time
-						theHero.subtractHP(MY_RANDOM.nextInt(20) + 1);
+						// theHero.takeDamage(MY_RANDOM.nextInt(20) + 1); // Need a public method for the hero to take pitfall damage
 						break;
-					case "X":
-						//PLACEHOLDER
-						// GENERATEs MONSTER
-						// ACTIVATEs COMBAT
+					case 'X':
+						// DungeonCharacter enemy = HeroesVersusMonsters.createRandomMonster(); // Need a method to create a monster
+						// INITIATE COMBAT
 						break;
-					case "C":
+					case 'C':
 						//PLACEHOLDER
 						// HERO GETS A CROWN PIECE
 						break;
@@ -129,8 +137,26 @@ public class Room {
 				}
 			}
 			myItems.clear();
-			myItems.add("E");
+			myItems.add('E');
 		}
+	}
+	
+	/**
+	 * Returns the item(s) contained in this instance.
+	 * 
+	 * @return a reference to an ArrayList of the items.
+	 */
+	public LinkedList<Character> getItems() {
+		return myItems;
+	}
+	
+	/**
+	 * Returns whether this instance has been revealed or not yet.
+	 * 
+	 * @return a boolean for whether the instance has been revealed.
+	 */
+	public boolean getReveal() {
+		return myReveal;
 	}
 	
 	/**
