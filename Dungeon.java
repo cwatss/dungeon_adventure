@@ -22,15 +22,15 @@ import java.util.Set;
  */
 public class Dungeon {
 	
-	/*
-	 * DEBUG MAIN
-	 * Utilized with a placeholder Room class that just returns "?" as its
-	 * toString()
-	 */
-	public static void main(String[] theArgs) {
-		Dungeon test = new Dungeon(10);
-		System.out.println(test);		
-	}
+/*
+ * DEBUG MAIN
+ * Utilized with a placeholder Room class that just returns "?" as its
+ * toString()
+ */
+public static void main(String[] theArgs) {
+	Dungeon test = new Dungeon(2);
+	System.out.println(test);
+}
 	
 	/** 2D array of Rooms within an instance of this class. */
 	private Room[][] myMaze;
@@ -47,9 +47,9 @@ public class Dungeon {
 	 * @param theSize is the size for myMaze.
 	 */
 	public Dungeon(final int theSize) {
-		if (theSize <= 0)
+		if (theSize < 2)
 			throw new IllegalArgumentException("Size passed to Dungeon " +
-											  "constructor was 0 or less.");
+											"constructor was less than 2.");
 		/* 
 		 * Corresponding rows of myLocales
 		 * 0 - Entrance
