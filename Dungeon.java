@@ -82,12 +82,14 @@ public static void main(String[] theArgs) {
 		for (int row = 0; row < returnArray.length - 1; row++) {
 			for (int col = 0; col < returnArray[row].length; col++) {
 				int hold = rand.nextInt(theSize);
-				if (col == 0)
-					holder = hold;
-				else {
+				if (col == 0) {
+					while(temp.containsKey(hold) && temp.get(hold).size() == theSize)
+						hold = rand.nextInt(theSize);
+					holder = hold;				
+				} else {
 					if (temp.containsKey(holder)) {
 						while(temp.get(holder).contains(hold))
-							hold = rand.nextInt(5);
+							hold = rand.nextInt(theSize);
 					} else
 						temp.put(holder, new HashSet<Integer>());
 					temp.get(holder).add(hold);				
